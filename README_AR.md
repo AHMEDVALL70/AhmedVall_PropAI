@@ -1,7 +1,3 @@
----
-
-#### 2. النص الكامل والمنقح لملف `README_AR.md`:
-```markdown
 [🇺🇸 English Version](README_EN.md) | [📊 قراءة باللغة العربية](README_AR.md)
 
 ---
