@@ -123,15 +123,6 @@ html[dir="ltr"] .data-tbl{text-align:left}
 .detail-item{background:#1f2937;padding:12px;border-radius:8px;border:1px solid #374151}
 .detail-item label{font-size:11px;color:#94a3b8;display:block;margin-bottom:4px}
 .detail-item span{font-size:14px;font-weight:600;color:#fff}
-.api-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:500}
-.api-modal-box{background:#111827;border:1px solid #3b82f6;border-radius:14px;width:520px;max-width:94vw;padding:28px;box-shadow:0 0 40px rgba(59,130,246,0.15)}
-.api-modal-box h2{font-size:17px;font-weight:700;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.api-modal-box p{font-size:12px;color:#94a3b8;line-height:1.7;margin-bottom:16px}
-.api-key-input{width:100%;background:#0a0f1e;border:1px solid #374151;border-radius:8px;padding:12px 14px;color:#fff;font-size:13px;font-family:monospace;outline:none;margin-bottom:8px;transition:border 0.2s}
-.api-key-input:focus{border-color:#3b82f6}
-.api-notice{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:12px 14px;font-size:11px;color:#f59e0b;line-height:1.7;margin-bottom:18px}
-.api-notice strong{color:#fbbf24}
-.api-modal-btns{display:flex;gap:10px;justify-content:flex-end}
 .sidebar-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:40}
 .sidebar-overlay.active{display:block}
 .analytics-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:20px}
@@ -214,26 +205,6 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
 </head>
 <body>
 
-<div class="api-modal" id="api-modal">
-  <div class="api-modal-box">
-    <h2><i class="fa-solid fa-key" style="color:#3b82f6"></i> <span data-ar="مفتاح Claude API" data-en="Claude API Key">مفتاح Claude API</span></h2>
-    <p data-ar="لتفعيل المستشار العقاري الذكي، أدخل مفتاح Anthropic API الخاص بك.<br>المفتاح يُحفظ في <strong style='color:#fff'>ذاكرة المتصفح المؤقتة (Session)</strong> فقط ويُمحى عند إغلاق النافذة."
-       data-en="To activate the AI Real Estate Advisor, enter your Anthropic API key.<br>The key is stored in <strong style='color:#fff'>session memory only</strong> and is cleared when you close the window.">
-      لتفعيل المستشار العقاري الذكي، أدخل مفتاح Anthropic API الخاص بك.<br>
-      المفتاح يُحفظ في <strong style="color:#fff">ذاكرة المتصفح المؤقتة (Session)</strong> فقط ويُمحى عند إغلاق النافذة.
-    </p>
-    <input class="api-key-input" type="password" id="api-key-field" placeholder="sk-ant-api03-..."/>
-    <div class="api-notice">
-      <strong>⚠️ <span data-ar="تنبيه أمني" data-en="Security Notice">تنبيه أمني</span>:</strong>
-      <span data-ar="لا تشارك هذا المفتاح مع أحد." data-en="Do not share this key with anyone.">لا تشارك هذا المفتاح مع أحد.</span>
-    </div>
-    <div class="api-modal-btns">
-      <button class="btn btn-secondary" onclick="skipApiKey()" data-ar="تخطي — استخدام ردود جاهزة" data-en="Skip — Use preset responses">تخطي — استخدام ردود جاهزة</button>
-      <button class="btn btn-blue" onclick="saveApiKey()"><i class="fa-solid fa-lock"></i> <span data-ar="حفظ وتفعيل" data-en="Save & Activate">حفظ وتفعيل</span></button>
-    </div>
-  </div>
-</div>
-
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <div class="shell">
@@ -281,9 +252,9 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
         </div>
         <div class="stat-card maroon">
           <div class="stat-info">
-            <h3 data-ar="متوسط سعر المتر (ر.ق)" data-en="Avg Price/m² (QAR)">متوسط سعر المتر (ر.ق)</h3>
-            <div class="num">14,250</div>
-            <div class="sub"><i class="fa-solid fa-arrow-up"></i> <span data-ar="+3.2% مقارنة بالربع السابق" data-en="+3.2% vs last quarter">+3.2% مقارنة بالربع السابق</span></div>
+            <h3 data-ar="متوسط سعر متر الشقق (ر.ق)" data-en="Avg Apartment Price/m² (QAR)">متوسط سعر متر الشقق (ر.ق)</h3>
+            <div class="num">10,460</div>
+            <div class="sub"><i class="fa-solid fa-arrow-up"></i> <span data-ar="+1.6% سنوياً (مؤشر VPI)" data-en="+1.6% annually (VPI)">+1.6% سنوياً (مؤشر VPI)</span></div>
           </div>
           <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
         </div>
@@ -307,7 +278,7 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
       <div class="table-wrapper">
         <div class="table-header">
           <h3 data-ar="ملخص مؤشرات السوق حسب البلديات الرئيسية" data-en="Market Indicators by Municipality">ملخص مؤشرات السوق حسب البلديات الرئيسية</h3>
-          <span style="font-size:11px;color:#64748b" data-ar="آخر تحديث: يونيو 2026" data-en="Last updated: June 2026">آخر تحديث: يونيو 2026</span>
+          <span style="font-size:11px;color:#64748b" data-ar="المصدر: تقرير ValuStrat Q2 2026 · آخر تحديث: أغسطس 2026" data-en="Source: ValuStrat Q2 2026 Report · Last updated: August 2026">المصدر: تقرير ValuStrat Q2 2026 · آخر تحديث: أغسطس 2026</span>
         </div>
         <div class="table-scroll">
           <table class="data-tbl">
@@ -322,36 +293,37 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
             </thead>
             <tbody>
               <tr onclick="switchTab('search',null);highlightNav('search')">
-                <td><strong data-ar="الدوحة (اللؤلؤة / المشيرب)" data-en="Doha (Pearl / Musheireb)">الدوحة (اللؤلؤة / المشيرب)</strong></td>
+                <td><strong data-ar="الدوحة (اللؤلؤة)" data-en="Doha (Pearl Qatar)">الدوحة (اللؤلؤة)</strong></td>
                 <td data-ar="شقق فاخرة وأبراج" data-en="Luxury Apartments & Towers">شقق فاخرة وأبراج</td>
-                <td>16,500 QAR</td>
+                <td>10,570 QAR</td>
                 <td><span class="badge high" data-ar="مرتفع جداً" data-en="Very High">مرتفع جداً</span></td>
-                <td style="color:#10b981"><i class="fa-solid fa-arrow-trend-up"></i> <span data-ar="تصاعدي مستقر" data-en="Steady Uptrend">تصاعدي مستقر</span></td>
+                <td style="color:#f59e0b"><i class="fa-solid fa-arrow-right"></i> <span data-ar="مستقر تقريباً (ثابت سنوياً)" data-en="Broadly Stable (flat YoY)">مستقر تقريباً (ثابت سنوياً)</span></td>
               </tr>
               <tr onclick="switchTab('search',null);highlightNav('search')">
                 <td><strong data-ar="الظعاين (مدينة لوسيل)" data-en="Al Daayen (Lusail City)">الظعاين (مدينة لوسيل)</strong></td>
                 <td data-ar="شقق حديثة وفلل مستقلة" data-en="Modern Apartments & Villas">شقق حديثة وفلل مستقلة</td>
-                <td>13,800 QAR</td>
+                <td>10,365 QAR</td>
                 <td><span class="badge high" data-ar="مرتفع" data-en="High">مرتفع</span></td>
-                <td style="color:#10b981"><i class="fa-solid fa-arrow-trend-up"></i> <span data-ar="نمو متسارع" data-en="Rapid Growth">نمو متسارع</span></td>
+                <td style="color:#10b981"><i class="fa-solid fa-arrow-trend-up"></i> <span data-ar="+1.5% سنوياً (الوحيدة بنمو إيجابي)" data-en="+1.5% YoY (only zone with positive growth)">+1.5% سنوياً (الوحيدة بنمو إيجابي)</span></td>
               </tr>
               <tr onclick="switchTab('search',null);highlightNav('search')">
-                <td><strong data-ar="بلدية الريان" data-en="Al Rayyan Municipality">بلدية الريان</strong></td>
+                <td><strong data-ar="بلدية الريان *" data-en="Al Rayyan Municipality *">بلدية الريان *</strong></td>
                 <td data-ar="فلل سكنية ومجمعات" data-en="Residential Villas & Compounds">فلل سكنية ومجمعات</td>
-                <td>11,200 QAR</td>
+                <td>~3,600 QAR</td>
                 <td><span class="badge mid" data-ar="متوسط" data-en="Medium">متوسط</span></td>
                 <td style="color:#f59e0b"><i class="fa-solid fa-arrow-right"></i> <span data-ar="مستقر ثابت" data-en="Stable">مستقر ثابت</span></td>
               </tr>
               <tr onclick="switchTab('search',null);highlightNav('search')">
                 <td><strong data-ar="بلدية الوكرة" data-en="Al Wakra Municipality">بلدية الوكرة</strong></td>
                 <td data-ar="عقارات سكنية وتجارية" data-en="Residential & Commercial">عقارات سكنية وتجارية</td>
-                <td>9,500 QAR</td>
+                <td>~3,985 QAR</td>
                 <td><span class="badge low" data-ar="مستقر" data-en="Stable">مستقر</span></td>
-                <td style="color:#10b981"><i class="fa-solid fa-arrow-trend-up"></i> <span data-ar="صعود تدريجي" data-en="Gradual Rise">صعود تدريجي</span></td>
+                <td style="color:#10b981"><i class="fa-solid fa-arrow-trend-up"></i> <span data-ar="نشاط تداول مرتفع" data-en="High transaction activity">نشاط تداول مرتفع</span></td>
               </tr>
             </tbody>
           </table>
         </div>
+        <div style="padding:10px 20px;font-size:11px;color:#64748b;border-top:1px solid #1e2d47" data-ar="* الأرقام غير المسبوقة بعلامة تقريب (~) مأخوذة مباشرة من تقرير ValuStrat. الأرقام المسبوقة بـ (~) أو بعلامة (*) تقديرية وليست رسمية، اعتُمدت لعدم توفر بيانات دقيقة منشورة لهذه المناطق تحديداً." data-en="* Figures without a (~) are taken directly from the ValuStrat report. Figures marked with (~) or (*) are estimates, not official, used where no precise published data exists for that specific zone.">* الأرقام غير المسبوقة بعلامة تقريب (~) مأخوذة مباشرة من تقرير ValuStrat. الأرقام المسبوقة بـ (~) أو بعلامة (*) تقديرية وليست رسمية، اعتُمدت لعدم توفر بيانات دقيقة منشورة لهذه المناطق تحديداً.</div>
       </div>
     </div>
 
@@ -465,7 +437,7 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
       <div class="analytics-grid">
         <div class="chart-box">
           <h4 data-ar="اتجاه أسعار العقارات في قطر 2026 (ر.ق / م²)" data-en="Qatar Real Estate Price Trend 2026 (QAR/m²)">اتجاه أسعار العقارات في قطر 2026 (ر.ق / م²)</h4>
-          <p class="chart-sub" data-ar="بيانات شهرية لمناطق مختارة" data-en="Monthly data for selected zones">بيانات شهرية لمناطق مختارة</p>
+          <p class="chart-sub" data-ar="اتجاه توضيحي مبني على تقارير السوق الفصلية — وليس بيانات شهرية حية" data-en="Illustrative trend based on quarterly market reports — not live monthly data">اتجاه توضيحي مبني على تقارير السوق الفصلية — وليس بيانات شهرية حية</p>
           <div class="chart-legend">
             <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> <span data-ar="لوسيل" data-en="Lusail">لوسيل</span></div>
             <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> <span data-ar="اللؤلؤة" data-en="Pearl">اللؤلؤة</span></div>
@@ -527,7 +499,10 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
         </div>
       </div>
       <div class="table-wrapper">
-        <div class="table-header"><h3 data-ar="مصفوفة أوزان الميزات العقارية في نموذج الذكاء الاصطناعي" data-en="AI Model Feature Weight Matrix">مصفوفة أوزان الميزات العقارية في نموذج الذكاء الاصطناعي</h3></div>
+        <div class="table-header">
+          <h3 data-ar="مصفوفة أوزان الميزات العقارية (تمثيل عام لعوامل التقييم في السوق)" data-en="Property Feature Weight Matrix (general market valuation factors)">مصفوفة أوزان الميزات العقارية (تمثيل عام لعوامل التقييم في السوق)</h3>
+          <span style="font-size:11px;color:#64748b" data-ar="توضيحية — النموذج الحالي يعتمد سعر المنطقة ونوع العقار فقط" data-en="Illustrative — current model uses zone price and property type only">توضيحية — النموذج الحالي يعتمد سعر المنطقة ونوع العقار فقط</span>
+        </div>
         <div class="table-scroll">
           <table class="data-tbl">
             <thead>
@@ -560,9 +535,6 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
               <h3 data-ar="المستشار العقاري الذكي — منصة أحمد فال" data-en="AI Real Estate Advisor — AhmedVall PropAI">المستشار العقاري الذكي — منصة أحمد فال</h3>
               <p id="api-status-label" data-ar="مدعوم بـ Claude AI · متخصص في سوق عقارات قطر 2026" data-en="Powered by Claude AI · Qatar Real Estate Expert 2026">مدعوم بـ Claude AI · متخصص في سوق عقارات قطر 2026</p>
             </div>
-            <button class="api-key-btn" id="change-key-btn" onclick="showApiModal()">
-              <i class="fa-solid fa-key"></i> <span id="key-btn-label" data-ar="تغيير المفتاح" data-en="Change Key">تغيير المفتاح</span>
-            </button>
           </div>
           <div class="chat-msgs" id="chat-msgs">
             <div class="msg ai">
@@ -687,11 +659,31 @@ for(let i=1031;i<=2050;i++){
 let currentPage=1,filteredData=[...PROPERTIES_DB];
 const PER_PAGE=10;
 
-const ZONE_PRICES={"west bay":18000,"musheireb":15500,"pearl":16500,"porto":16000,"qanat":16200,"al sadd":10500,"bin mahmoud":10000,"lusail":13800,"marina":14500,"fox hills":13000,"al yasmine":13200,"al kharaiej":12800,"al rayyan":11200,"al waab":11500,"khalifa":11800,"abu hamour":10000,"al wakra":9500,"al wukair":8800,"al khor":8000,"al ruwais":7800,"خليج الغربي":18000,"مشيرب":15500,"اللؤلؤة":16500,"بورتو":16000,"السد":10500,"لوسيل":13800,"مارينا":14500,"الفوكس هيلز":13000,"الياسمين":13200,"الريان":11200,"الوعب":11500,"مدينة خليفة":11800,"أبو هامور":10000,"الوكرة":9500,"الخور":8000,"الرويس":7800};
-const TYPE_MULT={"شقة":1,"فيلا":1.15,"بنتهاوس":1.35};
+// ===== بيانات أسعار العقارات — قطر 2026 =====
+// المصدر الأساسي: تقرير ValuStrat لسوق العقارات القطري، الربع الثاني 2026 (منشور علنياً، آخر تحديث أغسطس 2026).
+// أرقام مصدرية مباشرة: متوسط سعر الشقق إجمالاً 10,460 ر.ق/م²، اللؤلؤة 10,570، لوسيل 10,365، الخليج الغربي 9,460،
+// متوسط سعر الفلل إجمالاً 5,675 ر.ق/م² — أرقام حقيقية من تقرير سوق منشور، وليست بيانات حية (Live).
+// أرقام تقديرية: للمناطق التي لا تتوفر لها بيانات دقيقة منشورة (الريان، الوكرة، السد، مشيرب، إلخ)، اعتُمدت نسب
+// تقريبية مبنية على مقارنات سوقية عامة (مصدر: Darna Qatar)، ويجب عدم اعتبارها رسمية.
+const ZONE_PRICES={
+  "pearl":10570,"porto":10570,"qanat":10570,"viva":10570,"اللؤلؤة":10570,"بورتو":10570,"القناة":10570,
+  "lusail":10365,"marina":10365,"fox hills":10365,"al yasmine":10365,"al kharaiej":10365,
+  "لوسيل":10365,"مارينا":10365,"الفوكس هيلز":10365,"الياسمين":10365,
+  "west bay":9460,"الخليج الغربي":9460,"westbay":9460,
+  "al wakra":3985,"الوكرة":3985,
+  "musheireb":9200,"مشيرب":9200,
+  "al sadd":3200,"bin mahmoud":3200,"السد":3200,"بن محمود":3200,
+  "al rayyan":3600,"al waab":3600,"khalifa":3600,"الريان":3600,"الوعب":3600,"مدينة خليفة":3600,
+  "abu hamour":3000,"أبو هامور":3000,
+  "al wukair":2800,"الوكير":2800,
+  "al khor":2200,"الخور":2200,"al ruwais":2000,"الرويس":2000
+};
+// الفلل أرخص للمتر المربع من الشقق في السوق القطري وفق بيانات ValuStrat (5,675 مقابل 10,460 ر.ق/م² كمتوسط وطني)،
+// لذا يُطبَّق معامل تخفيض على أساس سعر الشقق في المنطقة نفسها بدل معامل رفع.
+const TYPE_MULT={"شقة":1,"فيلا":0.54,"بنتهاوس":1.28};
 
 function localPrice(zone,type,size){
-  let base=10000,best=0,zl=zone.toLowerCase();
+  let base=6500,best=0,zl=zone.toLowerCase();
   for(const k in ZONE_PRICES){if(zl.includes(k.toLowerCase())&&k.length>best){best=k.length;base=ZONE_PRICES[k];}}
   return Math.round(base*size*(TYPE_MULT[type]||1));
 }
@@ -815,47 +807,32 @@ function exportCSV(){
   showToast(currentLang==='ar'?'تم تصدير CSV بنجاح':'CSV exported successfully','success');
 }
 
-let CLAUDE_API_KEY='';
-let USE_LIVE_AI=false;
-function showApiModal(){document.getElementById('api-modal').style.display='flex';}
-function saveApiKey(){
-  const k=document.getElementById('api-key-field').value.trim();
-  if(!k.startsWith('sk-ant-')){showToast(currentLang==='ar'?'مفتاح غير صحيح':'Invalid key — must start with sk-ant-','error');return;}
-  CLAUDE_API_KEY=k;USE_LIVE_AI=true;
-  sessionStorage.setItem('__af_session_key__',btoa(k));
-  document.getElementById('api-modal').style.display='none';
-  document.getElementById('api-key-field').value='';
-  document.getElementById('api-status-label').textContent=currentLang==='ar'?'متصل بـ Claude AI ✅':'Connected to Claude AI ✅';
-  document.getElementById('change-key-btn').classList.add('set');
-  document.getElementById('key-btn-label').textContent=currentLang==='ar'?'مفتاح نشط ✓':'Key Active ✓';
-  showToast(currentLang==='ar'?'تم تفعيل Claude AI بنجاح':'Claude AI activated','success');
-}
-function skipApiKey(){
-  USE_LIVE_AI=false;CLAUDE_API_KEY='';
-  document.getElementById('api-modal').style.display='none';
-  document.getElementById('api-status-label').textContent=currentLang==='ar'?'وضع الردود الجاهزة':'Preset responses mode';
-  showToast(currentLang==='ar'?'تم التخطي':'Skipped — using preset responses','success');
-}
+// ===== اتصال آمن بالمستشار الذكي عبر الخادم الخلفي =====
+// المفتاح لم يعد يُخزَّن أو يُرسَل من المتصفح إطلاقاً.
+// كل الطلبات تذهب إلى الخادم الوسيط (Cloudflare Worker) الذي يحتفظ بالمفتاح كسرّ على الخادم.
+// بعد نشر الـ Worker (راجع ملف worker.js وREADME.md المرفقين)، ضع رابطه هنا:
+const BACKEND_URL = 'https://ahmedvall-propai-backend.ahmedvall.workers.dev/chat';
+let backendAvailable = null; // null = لم يُختبر بعد
 
 let chatHistory=[];
-const SYSTEM_PROMPT_AR=`أنت مستشار عقاري خبير متخصص في سوق العقارات بدولة قطر لعام 2026. لديك معرفة بأسعار: لوسيل(13800ر.ق/م²)، اللؤلؤة(16500)، المشيرب(15000)، الريان(11200)، الوكرة(9500)، الخليج الغربي(18000). العوائد الإيجارية 5-7.5%. أجب بالعربية بشكل مهني ومختصر مع أرقام دقيقة.`;
-const SYSTEM_PROMPT_EN=`You are an expert real estate advisor specializing in Qatar's 2026 property market. You know prices: West Bay(18000 QAR/m²), Pearl(16500), Musheireb(15000), Lusail(13800), Al Rayyan(11200), Al Wakra(9500). Rental yields 5-7.5%. Respond professionally in English with precise figures.`;
+const SYSTEM_PROMPT_AR=`أنت مستشار عقاري خبير متخصص في سوق العقارات بدولة قطر لعام 2026. تعتمد بياناتك على تقرير ValuStrat للربع الثاني من 2026: متوسط سعر الشقق إجمالاً 10,460 ر.ق/م²، اللؤلؤة 10,570، لوسيل 10,365، الخليج الغربي 9,460، متوسط سعر الفلل 5,675 ر.ق/م²، العائد الإيجاري للشقق نحو 8% وللفلل نحو 4.4%. بالنسبة للمناطق الأخرى (الريان، الوكرة، السد، مشيرب) استخدم تقديرات تقريبية مبنية على نسب معلنة ونبّه صراحة أنها تقديرية لا رسمية. أجب بالعربية بشكل مهني ومختصر، واذكر دائماً أن الأرقام تقديرية وتعتمد على آخر تقرير سوق منشور لا بيانات حية.`;
+const SYSTEM_PROMPT_EN=`You are an expert real estate advisor specializing in Qatar's 2026 property market. Your data is based on the ValuStrat Q2 2026 report: overall apartment average 10,460 QAR/m², Pearl 10,570, Lusail 10,365, West Bay Lagoon 9,460, villa average 5,675 QAR/m², apartment rental yield ~8%, villa yield ~4.4%. For other zones (Al Rayyan, Al Wakra, Al Sadd, Musheireb) use rough estimates based on published ratios and clearly flag them as estimated, not official. Respond professionally and concisely, and always note figures are estimates from the latest published market report, not live data.`;
 
 const FALLBACK_AR={};
-FALLBACK_AR['نمو']= '🤖 تتصدر <strong>لوسيل المارينا</strong> بنمو 4.2% ربع سنوي، تليها <strong>اللؤلؤة</strong> بطلب دولي متزايد.';
-FALLBACK_AR['فيلا']='🤖 فيلا 500م² في لوسيل: السعر العادل <strong>5.1 — 5.45 مليون ر.ق</strong> حسب الموقع الداخلي.';
-FALLBACK_AR['لؤلؤة']='🤖 <strong>اللؤلؤة</strong>: 16,500 ر.ق/م². <strong>السد/بن محمود</strong>: 9,000–12,000 ر.ق. الأولى للاستثمار الدولي.';
-FALLBACK_AR['مشيرب']='🤖 العائد الإيجاري في <strong>المشيرب</strong>: <strong>6.8% — 7.5%</strong> سنوياً.';
-FALLBACK_AR['استثمار']='🤖 أفضل مناطق 2026: (1) لوسيل مارينا (2) اللؤلؤة (3) المشيرب (4) الوكرة.';
-FALLBACK_AR['default']='🤖 للحصول على تحليل دقيق، يرجى إدخال مفتاح Claude API. أو اسألني عن: المناطق، العوائد، الأسعار.';
+FALLBACK_AR['نمو']= '🤖 وفق تقرير ValuStrat للربع الثاني 2026، <strong>لوسيل</strong> هي المنطقة الحرة الوحيدة التي سجلت نمواً سنوياً إيجابياً (+1.5%)، بينما بقيت اللؤلؤة مستقرة نسبياً.';
+FALLBACK_AR['فيلا']='🤖 متوسط سعر الفلل في قطر (تقرير Q2 2026): <strong>5,675 ر.ق/م²</strong>. فيلا 500م² في لوسيل تُقدَّر تقريبياً بين <strong>2.6 — 2.9 مليون ر.ق</strong>، والرقم الدقيق يعتمد على الموقع والتشطيب.';
+FALLBACK_AR['لؤلؤة']='🤖 <strong>اللؤلؤة</strong>: 10,570 ر.ق/م² للشقق. <strong>لوسيل</strong>: 10,365 ر.ق/م². <strong>الخليج الغربي</strong>: 9,460 ر.ق/م² (بيانات ValuStrat Q2 2026).';
+FALLBACK_AR['مشيرب']='🤖 العائد الإيجاري لشقق الدوحة عموماً يتراوح بين <strong>6% — 8%</strong> في المناطق المرغوبة، وهذا رقم تقديري وليس خاصاً بمشيرب تحديداً.';
+FALLBACK_AR['استثمار']='🤖 وفق أحدث البيانات: متوسط العائد الإيجاري للشقق في قطر نحو <strong>8%</strong> مقابل <strong>4.4%</strong> للفلل. لوسيل واللؤلؤة والخليج الغربي هي أكثر المناطق نشاطاً في التداول.';
+FALLBACK_AR['default']='🤖 هذا رد جاهز مبني على تقرير السوق الأخير (ValuStrat Q2 2026)، وليس تحليلاً حياً. اسألني عن: المناطق، العوائد، الأسعار — أو فعّل المستشار الذكي الكامل عبر الخادم الآمن.';
 
 const FALLBACK_EN={};
-FALLBACK_EN['growth']='🤖 <strong>Lusail Marina</strong> leads with +4.2% quarterly growth, followed by <strong>Pearl Qatar</strong> with strong international demand.';
-FALLBACK_EN['villa']='🤖 A 500m² villa in Lusail: Fair value is <strong>5.1 — 5.45 million QAR</strong> depending on exact location.';
-FALLBACK_EN['pearl']='🤖 <strong>Pearl Qatar</strong>: 16,500 QAR/m². <strong>Al Sadd/Downtown</strong>: 9,000–12,000 QAR/m². Pearl suits international investors.';
-FALLBACK_EN['musheireb']='🤖 Net rental yield in <strong>Musheireb</strong>: <strong>6.8% — 7.5%</strong> annually due to high diplomatic demand.';
-FALLBACK_EN['invest']='🤖 Top zones 2026: (1) Lusail Marina (2) Pearl Qatar (3) Musheireb (4) Al Wakra Coastal.';
-FALLBACK_EN['default']='🤖 For a precise analysis, please add your Claude API key. Or ask me about: zones, yields, prices, investment.';
+FALLBACK_EN['growth']='🤖 Per ValuStrat Q2 2026, <strong>Lusail</strong> is the only major freehold zone with positive annual growth (+1.5%), while Pearl Qatar remained broadly stable.';
+FALLBACK_EN['villa']='🤖 Qatar\'s average villa value (ValuStrat Q2 2026): <strong>5,675 QAR/m²</strong>. A 500m² villa in Lusail is roughly <strong>2.6 — 2.9 million QAR</strong>, depending on exact location and finishing.';
+FALLBACK_EN['pearl']='🤖 <strong>Pearl Qatar</strong>: 10,570 QAR/m². <strong>Lusail</strong>: 10,365 QAR/m². <strong>West Bay Lagoon</strong>: 9,460 QAR/m² (ValuStrat Q2 2026 data).';
+FALLBACK_EN['musheireb']='🤖 Doha apartment rental yields generally range <strong>6% — 8%</strong> in prime districts — this is a general estimate, not Musheireb-specific.';
+FALLBACK_EN['invest']='🤖 Per the latest data: apartments average <strong>8%</strong> gross yield vs <strong>4.4%</strong> for villas. Lusail, Pearl Qatar and West Bay remain the most active trading zones.';
+FALLBACK_EN['default']='🤖 This is a preset response based on the latest published market report (ValuStrat Q2 2026), not a live analysis. Ask me about: zones, yields, prices — or the full AI advisor is available through the secure backend.';
 
 function getFallback(text){
   const t=text.toLowerCase();
@@ -879,17 +856,19 @@ function getFallback(text){
 async function callClaudeAPI(msg){
   chatHistory.push({role:'user',content:msg});
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{
+    // الطلب يذهب إلى الخادم الخلفي الخاص بنا فقط — لا يوجد مفتاح API في هذا الملف إطلاقاً
+    const r=await fetch(BACKEND_URL,{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':CLAUDE_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:currentLang==='ar'?SYSTEM_PROMPT_AR:SYSTEM_PROMPT_EN,messages:chatHistory})
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system:currentLang==='ar'?SYSTEM_PROMPT_AR:SYSTEM_PROMPT_EN,messages:chatHistory})
     });
     if(!r.ok)throw new Error(`HTTP ${r.status}`);
     const d=await r.json();
-    const reply=d.content.map(b=>b.type==='text'?b.text:'').join('');
+    const reply=d.reply || '';
     chatHistory.push({role:'assistant',content:reply});
+    backendAvailable=true;
     return reply;
-  }catch(e){chatHistory.pop();throw e;}
+  }catch(e){chatHistory.pop();backendAvailable=false;throw e;}
 }
 
 function addMsg(sender,text){
@@ -915,17 +894,26 @@ async function sendMessage(text){
   addMsg('user',text);showTyping();
   try{
     let reply;
-    if(USE_LIVE_AI&&CLAUDE_API_KEY){
+    if(backendAvailable!==false){
+      // نحاول دائماً الاتصال الحقيقي عبر الخادم الآمن أولاً
       reply=await callClaudeAPI(text);
       reply=reply.replace(/\n/g,'<br>');
     } else {
+      // الخادم غير متاح حالياً (لم يُنشر بعد أو تعطّل) — نستخدم ردوداً جاهزة مبنية على بيانات السوق الأخيرة
       await new Promise(r=>setTimeout(r,800+Math.random()*600));
       reply=getFallback(text);
     }
     removeTyping();addMsg('ai',reply);
   }catch(e){
     removeTyping();
-    addMsg('ai',currentLang==='ar'?'⚠️ <em>خطأ في الاتصال.</em>':'⚠️ <em>Connection error. Check your API key.</em>');
+    if(backendAvailable===false){
+      await new Promise(r=>setTimeout(r,500));
+      addMsg('ai',getFallback(text));
+    } else {
+      addMsg('ai',currentLang==='ar'
+        ?'⚠️ <em>تعذّر الوصول إلى المستشار الذكي حالياً. تأكد من نشر الخادم الخلفي (Worker) وتحديث BACKEND_URL في الكود.</em>'
+        :'⚠️ <em>Could not reach the AI advisor. Make sure the backend Worker is deployed and BACKEND_URL is set.</em>');
+    }
   }finally{btn.disabled=false;inp.disabled=false;inp.focus();}
 }
 function sendInputText(){const inp=document.getElementById('chat-input');const t=inp.value.trim();if(!t)return;inp.value='';sendMessage(t);}
@@ -966,8 +954,6 @@ function startClock(){
 }
 
 window.onload=function(){
-  const saved=sessionStorage.getItem('__af_session_key__');
-  if(saved){try{CLAUDE_API_KEY=atob(saved);USE_LIVE_AI=true;document.getElementById('api-modal').style.display='none';}catch(e){}}
   renderTable();startClock();updateDashCount();
   document.getElementById('chat-input').addEventListener('keypress',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendInputText();}});
   document.getElementById('f-zone').addEventListener('input',runFilter);
