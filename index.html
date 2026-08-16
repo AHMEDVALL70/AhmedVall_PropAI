@@ -568,7 +568,7 @@ html[dir="ltr"] .typing-label{margin-right:0;margin-left:6px}
         <div class="filter-row search-cols">
           <div class="form-grp">
             <label data-ar="اسم المنطقة" data-en="Zone Name">اسم المنطقة</label>
-            <input type="text" id="f-zone" placeholder="Search zone..."/>
+            <input type="text" id="f-zone" placeholder="مثال: اللؤلؤة أو Lusail"/>
           </div>
           <div class="form-grp">
             <label data-ar="نوع العقار" data-en="Property Type">نوع العقار</label>
@@ -1005,13 +1005,34 @@ function buildPagination(total){
   const next=document.createElement('button');next.className='page-btn';next.innerHTML='<i class="fa-solid fa-chevron-left"></i>';next.disabled=currentPage===total;next.onclick=()=>{currentPage++;renderTable();};c.appendChild(next);
 }
 
+// قاموس مرادفات: يربط الكلمات العربية بمكافئها بالبيانات (المخزّنة بالإنجليزي)
+// هذا يسمح للمستخدم يبحث بالعربي أو الإنجليزي وتشتغل النتيجة بنفس الطريقة
+const ZONE_SEARCH_ALIASES = {
+  'اللؤلؤة':'pearl', 'بورتو':'pearl porto', 'القناة':'pearl qanat',
+  'لوسيل':'lusail', 'مارينا':'lusail marina', 'الفوكس هيلز':'lusail fox hills', 'الياسمين':'lusail al yasmine',
+  'الريان':'al rayyan', 'الوعب':'al waab', 'مدينة خليفة':'khalifa',
+  'الوكرة':'al wakra', 'مشيرب':'musheireb', 'الدوحة':'doha musheireb pearl',
+  'السد':'al sadd', 'بن محمود':'bin mahmoud', 'الخليج الغربي':'west bay'
+};
+function matchZone(query, zoneField){
+  const q = query.trim().toLowerCase();
+  if(!q) return true;
+  const zf = zoneField.toLowerCase();
+  if(zf.includes(q)) return true; // مطابقة مباشرة (بحث إنجليزي أو نص متطابق)
+  // نحاول إيجاد مرادف عربي يطابق جزء من كلمة البحث، ونقارن مقابله الإنجليزي بحقل المنطقة
+  for(const arKey in ZONE_SEARCH_ALIASES){
+    if(q.includes(arKey) && zf.includes(ZONE_SEARCH_ALIASES[arKey])) return true;
+  }
+  return false;
+}
+
 function runFilter(){
   const z=document.getElementById('f-zone').value.trim().toLowerCase();
   const t=document.getElementById('f-type').value;
   const s=parseInt(document.getElementById('f-size').value)||0;
   const b=document.getElementById('f-beds').value;
   filteredData=PROPERTIES_DB.filter(p=>{
-    if(z&&!p.zone.toLowerCase().includes(z))return false;
+    if(z&&!matchZone(z,p.zone))return false;
     if(t!=='All'&&p.type!==t)return false;
     if(s&&p.size<s)return false;
     if(b!=='All'&&p.beds!==b)return false;
