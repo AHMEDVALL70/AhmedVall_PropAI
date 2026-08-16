@@ -853,21 +853,6 @@ let PROPERTIES_DB = [
   {id:"QA-PROP-1030",zone:"Al Wakra (Coastal)",type:"فيلا",size:400,beds:"3",price:3400000,pred:3100000,status:"Overpriced",cls:"high",desc:"Close to Al Wakra market and beach."}
 ];
 
-const MOCK_ZONES=["Lusail (Marina)","Pearl (Viva Bahriyah)","Al Rayyan","Al Wakra","Musheireb","Al Sadd"];
-const MOCK_TYPES=["شقة","فيلا","بنتهاوس"];
-for(let i=1031;i<=2050;i++){
-  let z=MOCK_ZONES[i%MOCK_ZONES.length],t=MOCK_TYPES[i%MOCK_TYPES.length];
-  let s=t==="فيلا"?420:t==="بنتهاوس"?310:135;
-  let b=t==="فيلا"?"4+":"3";
-  let pr=t==="فيلا"?4500000:2100000,pd=t==="فيلا"?4600000:2250000;
-  PROPERTIES_DB.push({id:`QA-PROP-${i}`,zone:z,type:t,size:s,beds:b,price:pr,pred:pd,status:"Fair Price",cls:"mid",desc:"Archived property record."});
-}
-
-let currentPage=1,filteredData=[...PROPERTIES_DB];
-const PER_PAGE=10;
-
-// ===== REAL MARKET DATA =====
-// ===== بيانات أسعار العقارات — قطر 2026 =====
 // المصدر: تقرير ValuStrat لسوق العقارات القطري، الربع الثاني 2026 (منشور علنياً، آخر تحديث أغسطس 2026).
 // أرقام مصدرية مباشرة: اللؤلؤة 10,570، لوسيل 10,365، الخليج الغربي 9,460، الوكرة 3,985 ر.ق/م².
 // أرقام تقديرية (غير رسمية) للمناطق بدون بيانات دقيقة منشورة: الريان، السد، مشيرب، وغيرها.
@@ -904,6 +889,23 @@ function localPrice(zone, type, size) {
     return Math.round(base * size * multiplier);
 }
 
+const MOCK_ZONES=["Lusail Marina","Pearl Porto Arabia","Al Rayyan","Al Wakra Coastal","Musheireb","Al Sadd"];
+const MOCK_TYPES=["شقة","فيلا","بنتهاوس"];
+for(let i=1031;i<=2050;i++){
+  let z=MOCK_ZONES[i%MOCK_ZONES.length],t=MOCK_TYPES[i%MOCK_TYPES.length];
+  let s=t==="فيلا"?420:t==="بنتهاوس"?310:135;
+  let b=t==="فيلا"?"4+":"3";
+  // السعر يُحسب فعلياً من سعر المنطقة الحقيقي × نوع العقار × المساحة (بدل رقم ثابت يدوياً)
+  let pr=localPrice(z,t,s);
+  let pd=Math.round(pr*(0.97+Math.random()*0.06)); // تقدير تنبؤي قريب من السعر الفعلي بفارق طبيعي بسيط
+  PROPERTIES_DB.push({id:`QA-PROP-${i}`,zone:z,type:t,size:s,beds:b,price:pr,pred:pd,status:"Fair Price",cls:"mid",desc:"Archived property record."});
+}
+
+let currentPage=1,filteredData=[...PROPERTIES_DB];
+const PER_PAGE=10;
+
+// ===== REAL MARKET DATA =====
+
 // ===== LOAD REAL DATA =====
 const DATA_SOURCE_URL = 'https://raw.githubusercontent.com/AHMEDVALL70/AhmedVall_PropAI/main/properties.json';
 
@@ -928,9 +930,11 @@ function updateDashStats() {
     const total = PROPERTIES_DB.length;
     document.getElementById('dash-total-count').textContent = total.toLocaleString();
     if (total > 0) {
+        // متوسط سعر المتر الصحيح = مجموع كل الأسعار ÷ مجموع كل المساحات (وليس متوسط سعر العقار الكلي)
         const totalPrice = PROPERTIES_DB.reduce((sum, p) => sum + (p.price || 0), 0);
-        const avgPrice = Math.round(totalPrice / total);
-        document.getElementById('dash-avg-price').textContent = avgPrice.toLocaleString();
+        const totalSize = PROPERTIES_DB.reduce((sum, p) => sum + (p.size || 0), 0);
+        const avgPricePerSqm = totalSize > 0 ? Math.round(totalPrice / totalSize) : 0;
+        document.getElementById('dash-avg-price').textContent = avgPricePerSqm.toLocaleString();
     }
 }
 
