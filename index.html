@@ -880,12 +880,24 @@ function getRealPricePerSqm(zone) {
             return QATAR_ZONES_DB[key];
         }
     }
-    return 11000;
+    return 6500; // قيمة افتراضية متحفظة لمنطقة غير معروفة، موحّدة مع باقي النموذج
+}
+
+// معامل الفلل يختلف حسب مستوى المنطقة: في المناطق الفاخرة الجديدة (اللؤلؤة، لوسيل، الخليج الغربي، مشيرب)
+// الفلل قريبة من سعر الشقق أو أعلى (فلل بحرية/حدائق خاصة)، بعكس المتوسط الوطني العام الذي ينخفض بسبب
+// فلل المناطق السكنية الأقدم كالريان والوكرة. تطبيق خصم واحد على الكل كان غير دقيق.
+function getVillaMultiplier(basePricePerSqm) {
+    return basePricePerSqm >= 9000 ? 0.85 : 0.54;
 }
 
 function localPrice(zone, type, size) {
     const base = getRealPricePerSqm(zone);
-    const multiplier = TYPE_MULT[type] || 1.0;
+    let multiplier;
+    if (type === "فيلا") {
+        multiplier = getVillaMultiplier(base);
+    } else {
+        multiplier = TYPE_MULT[type] || 1.0;
+    }
     return Math.round(base * size * multiplier);
 }
 
