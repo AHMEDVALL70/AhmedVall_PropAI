@@ -892,10 +892,19 @@ function localPrice(zone, type, size) {
 const MOCK_ZONES=["Lusail Marina","Pearl Porto Arabia","Al Rayyan","Al Wakra Coastal","Musheireb","Al Sadd"];
 const MOCK_TYPES=["شقة","فيلا","بنتهاوس"];
 for(let i=1031;i<=2050;i++){
-  let z=MOCK_ZONES[i%MOCK_ZONES.length],t=MOCK_TYPES[i%MOCK_TYPES.length];
-  let s=t==="فيلا"?420:t==="بنتهاوس"?310:135;
-  let b=t==="فيلا"?"4+":"3";
-  // السعر يُحسب فعلياً من سعر المنطقة الحقيقي × نوع العقار × المساحة (بدل رقم ثابت يدوياً)
+  let z=MOCK_ZONES[i%MOCK_ZONES.length];
+  // نوع العقار يُختار عشوائياً ومستقلاً عن المنطقة (كان مرتبط بنفس رقم الدورة، فكل منطقة كانت تحصل نوعاً واحداً فقط بسبب تطابق طول القائمتين)
+  let t=MOCK_TYPES[Math.floor(Math.random()*MOCK_TYPES.length)];
+  // مساحات متنوعة وواقعية بدل رقم ثابت (كانت كل الشقق 135م² بالضبط، ما يسمح بأي بحث بمساحة أعلى)
+  let s;
+  if(t==="فيلا") s=Math.round(350+Math.random()*250);      // 350–600 م²
+  else if(t==="بنتهاوس") s=Math.round(250+Math.random()*150); // 250–400 م²
+  else s=Math.round(100+Math.random()*140);                 // شقة: 100–240 م²
+  // عدد الغرف مرتبط بالمساحة، بعتبات مختلفة حسب نوع العقار (كانت عتبة موحدة تجعل كل الفلل والبنتهاوس دايماً "4+" فقط)
+  let b;
+  if(t==="فيلا") b = s<380 ? "3" : "4+";           // فلل: 3 غرف للمساحات الأصغر، 4+ للأكبر
+  else if(t==="بنتهاوس") b = s<300 ? "2" : s<370 ? "3" : "4+"; // بنتهاوس: توزيع واقعي بين 2-4+ غرف
+  else b = s<130 ? "2" : s<220 ? "3" : "4+";        // شقق: نفس المنطق السابق
   let pr=localPrice(z,t,s);
   let pd=Math.round(pr*(0.97+Math.random()*0.06)); // تقدير تنبؤي قريب من السعر الفعلي بفارق طبيعي بسيط
   PROPERTIES_DB.push({id:`QA-PROP-${i}`,zone:z,type:t,size:s,beds:b,price:pr,pred:pd,status:"Fair Price",cls:"mid",desc:"Archived property record."});
@@ -1008,10 +1017,10 @@ function buildPagination(total){
 // قاموس مرادفات: يربط الكلمات العربية بمكافئها بالبيانات (المخزّنة بالإنجليزي)
 // هذا يسمح للمستخدم يبحث بالعربي أو الإنجليزي وتشتغل النتيجة بنفس الطريقة
 const ZONE_SEARCH_ALIASES = {
-  'اللؤلؤة':'pearl', 'بورتو':'pearl porto', 'القناة':'pearl qanat',
-  'لوسيل':'lusail', 'مارينا':'lusail marina', 'الفوكس هيلز':'lusail fox hills', 'الياسمين':'lusail al yasmine',
+  'اللؤلؤة':'pearl', 'بورتو':'pearl porto', 'القناة':'qanat',
+  'لوسيل':'lusail', 'مارينا':'marina', 'الفوكس هيلز':'fox hills', 'الياسمين':'yasmine',
   'الريان':'al rayyan', 'الوعب':'al waab', 'مدينة خليفة':'khalifa',
-  'الوكرة':'al wakra', 'مشيرب':'musheireb', 'الدوحة':'doha musheireb pearl',
+  'الوكرة':'al wakra', 'مشيرب':'musheireb', 'الدوحة':'doha',
   'السد':'al sadd', 'بن محمود':'bin mahmoud', 'الخليج الغربي':'west bay'
 };
 function matchZone(query, zoneField){
