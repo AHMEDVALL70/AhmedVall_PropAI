@@ -877,10 +877,12 @@ function getRealPricePerSqm(zone) {
     const z = zone.toLowerCase();
     for (const key in QATAR_ZONES_DB) {
         if (z.includes(key) || key.includes(z)) {
-            return QATAR_ZONES_DB[key];
+            return { price: QATAR_ZONES_DB[key], isKnown: true };
         }
     }
-    return 6500; // قيمة افتراضية متحفظة لمنطقة غير معروفة، موحّدة مع باقي النموذج
+    // منطقة غير موجودة بقاعدتنا: نرجع قيمة متحفظة لكن نعلّم عليها بوضوح
+    // بدل ما نعطي المستخدم رقماً وكأنه دقيق (كانت هذه ملاحظة زميل صحيحة)
+    return { price: 6500, isKnown: false };
 }
 
 // معامل الفلل يختلف حسب مستوى المنطقة: في المناطق الفاخرة الجديدة (اللؤلؤة، لوسيل، الخليج الغربي، مشيرب)
@@ -891,14 +893,15 @@ function getVillaMultiplier(basePricePerSqm) {
 }
 
 function localPrice(zone, type, size) {
-    const base = getRealPricePerSqm(zone);
+    const zoneInfo = getRealPricePerSqm(zone);
+    const base = zoneInfo.price;
     let multiplier;
     if (type === "فيلا") {
         multiplier = getVillaMultiplier(base);
     } else {
         multiplier = TYPE_MULT[type] || 1.0;
     }
-    return Math.round(base * size * multiplier);
+    return { price: Math.round(base * size * multiplier), isKnown: zoneInfo.isKnown };
 }
 
 const MOCK_ZONES=["Lusail Marina","Pearl Porto Arabia","Al Rayyan","Al Wakra Coastal","Musheireb","Al Sadd"];
@@ -917,7 +920,7 @@ for(let i=1031;i<=2050;i++){
   if(t==="فيلا") b = s<380 ? "3" : "4+";           // فلل: 3 غرف للمساحات الأصغر، 4+ للأكبر
   else if(t==="بنتهاوس") b = s<300 ? "2" : s<370 ? "3" : "4+"; // بنتهاوس: توزيع واقعي بين 2-4+ غرف
   else b = s<130 ? "2" : s<220 ? "3" : "4+";        // شقق: نفس المنطق السابق
-  let pr=localPrice(z,t,s);
+  let pr=localPrice(z,t,s).price;
   let pd=Math.round(pr*(0.97+Math.random()*0.06)); // تقدير تنبؤي قريب من السعر الفعلي بفارق طبيعي بسيط
   PROPERTIES_DB.push({id:`QA-PROP-${i}`,zone:z,type:t,size:s,beds:b,price:pr,pred:pd,status:"Fair Price",cls:"mid",desc:"Archived property record."});
 }
@@ -972,17 +975,32 @@ async function addNewProperty(){
   const nextId=`QA-PROP-${maxId+1}`;
   st.style.display='flex';st.style.alignItems='center';st.style.gap='8px';
   st.innerHTML='<div class="spinner"></div> ' + (currentLang==='ar'?'جاري التقييم...':'Evaluating...');
-  let pred=localPrice(zone,type,size);
-  st.innerHTML='✅ ' + (currentLang==='ar'?'تم التقييم بالسوق الحقيقي':'Valued using real market data');
+  const result=localPrice(zone,type,size);
+  const pred=result.price;
+  // لو المنطقة مو موجودة بقاعدة بياناتنا، ننبّه المستخدم بوضوح بدل ما نعطيه رقم وكأنه دقيق
+  if(!result.isKnown){
+    st.innerHTML='⚠️ ' + (currentLang==='ar'
+      ? `منطقة "${zone}" غير متوفرة ببياناتنا — التقييم أدناه تخميني عام فقط وقد يكون غير دقيق`
+      : `"${zone}" is not in our database — the estimate below is a rough generic guess and may be inaccurate`);
+  } else {
+    st.innerHTML='✅ ' + (currentLang==='ar'?'تم التقييم بالسوق الحقيقي':'Valued using real market data');
+  }
   const diff=(price-pred)/pred;
   let status=currentLang==='ar'?'سعر عادل':'Fair Price',cls="mid";
   if(diff<-0.07){status=currentLang==='ar'?'لقطة استثمارية':'Investment Deal';cls="low";}
   else if(diff>0.07){status=currentLang==='ar'?'سعر مرتفع':'Overpriced';cls="high";}
-  PROPERTIES_DB.unshift({id:nextId,zone,type,size,beds,price,pred,status,cls,desc:currentLang==='ar'?`عقار مقيّم في ${zone}.`:`Property valued in ${zone}.`});
+  const desc = result.isKnown
+    ? (currentLang==='ar'?`عقار مقيّم في ${zone}.`:`Property valued in ${zone}.`)
+    : (currentLang==='ar'?`عقار في ${zone} (منطقة غير موثقة ببياناتنا، تقييم تخميني).`:`Property in ${zone} (undocumented zone, rough estimate).`);
+  PROPERTIES_DB.unshift({id:nextId,zone,type,size,beds,price,pred,status,cls,desc});
   filteredData=[...PROPERTIES_DB];currentPage=1;renderTable();updateDashStats();
   document.getElementById('add-zone').value='';document.getElementById('add-size').value='';document.getElementById('add-price').value='';
-  showToast(`${nextId} — ${currentLang==='ar'?'التقييم':'Estimate'}: ${pred.toLocaleString()} QAR`,'success');
-  setTimeout(()=>st.style.display='none',4000);
+  if(result.isKnown){
+    showToast(`${nextId} — ${currentLang==='ar'?'التقييم':'Estimate'}: ${pred.toLocaleString()} QAR`,'success');
+  } else {
+    showToast(`${nextId} — ${currentLang==='ar'?'تقييم تخميني (منطقة غير معروفة)':'Rough estimate (unknown zone)'}: ~${pred.toLocaleString()} QAR`,'error');
+  }
+  setTimeout(()=>st.style.display='none',6000);
 }
 
 // ===== RENDER TABLE =====
@@ -1182,13 +1200,17 @@ function getFallback(text){
 async function callSecureProxy(msg){
     chatHistory.push({role:'user', content:msg});
     try {
+        // نبني مصفوفة الرسائل بصيغة Claude Messages API (role + content) بدل إرسال
+        // حقول غير متوافقة مع worker.js — هذا هو إصلاح خطأ "messages is required".
+        const apiMessages = chatHistory.map(m => ({ role: m.role, content: m.content }));
+        const systemPrompt = currentLang === 'ar' ? SYSTEM_PROMPT_AR : SYSTEM_PROMPT_EN;
+
         const response = await fetch(PROXY_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: msg,
-                language: currentLang,
-                history: chatHistory.slice(0, -1)
+                system: systemPrompt,
+                messages: apiMessages
             })
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
